@@ -17,7 +17,8 @@ import (
 func Init(config *config.Configuration) {
 	conn, err := grpc.Dial(config.ServerAddressing,
 		grpc.WithInsecure(),
-		grpc.WithKeepaliveParams(config.GetClientParameters()))
+		grpc.WithKeepaliveParams(config.GetClientParameters()),
+		grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
