@@ -1,7 +1,9 @@
 package client
 
 import (
+	"google.golang.org/grpc/backoff"
 	"log"
+	"time"
 
 	"google.golang.org/grpc"
 
@@ -18,7 +20,17 @@ func Init(config *config.Configuration) {
 	conn, err := grpc.Dial(config.ServerAddressing,
 		grpc.WithInsecure(),
 		grpc.WithKeepaliveParams(config.GetClientParameters()),
-		grpc.WithBlock())
+		grpc.WithReturnConnectionError(),
+		grpc.WithConnectParams(grpc.ConnectParams{
+			Backoff: backoff.Config{
+				BaseDelay:  1 * time.Second,
+				Multiplier: 1.6,
+				Jitter:     0.2,
+				MaxDelay:   120 * time.Second,
+			},
+			MinConnectTimeout: 5 * time.Second,
+		}),
+		grpc.WithTimeout(5*time.Second))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

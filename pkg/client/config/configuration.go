@@ -23,11 +23,14 @@ type Configuration struct {
 
 	ATConfig ATConfig `yaml:"at" json:"at,omitempty"`
 
+	// Set To true,two phrase confirm/cancel asynchronous
+	Async bool `yaml:"async" json:"async,omitempty"`
+
 	ClientParameters struct {
 		Time                time.Duration `yaml:"time"`
 		Timeout             time.Duration `yaml:"timeout"`
 		PermitWithoutStream bool          `yaml:"permitWithoutStream"`
-	} `yaml:"clientParameters"`
+	} `yaml:"clientParameters"` //keepalive connect param
 
 	Log struct {
 		LogPath  string    `yaml:"logPath"`
